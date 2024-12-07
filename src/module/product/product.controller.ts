@@ -37,6 +37,64 @@ const getBicycles = async(req: Request, res: Response) => {
   }
 }
 
+const getSpecificBicycle = async(req: Request, res: Response) => {
+  try {
+    const productId = req.params.productId
+    const result = await productService.getSpecificBicycle(productId)
+    res.send({
+      message: 'Bicycle retrieved successfully',
+      status: true,
+      data: result,
+    })
+  } catch (error) {
+    res.json({
+      status: false,
+      message: 'Failed to get specific bicycle',
+      error,
+    })
+  }
+}
+
+const updateBicycle = async(req: Request, res: Response) => {
+  try {
+    const productId = req.params.productId
+    const body = req.body
+    const result = await productService.updateBicycle(productId, body)
+    res.send({
+      message: 'Bicycle updated successfully',
+      status: true,
+      data: result,
+    })
+  } catch (error) {
+    res.json({
+      status: false,
+      message: 'Failed to update Bicycle',
+      error,
+    })
+  }
+}
+
+const deleteBicycle = async(req: Request, res: Response) => {
+  try {
+    const productId = req.params.productId
+    await productService.deleteBicycle(productId)
+    res.send({
+      message: 'Bicycle deleted successfully',
+      status: true,
+      data: {},
+    })
+  } catch (error) {
+    res.json({
+      status: false,
+      message: 'Failed to delete Bicycle',
+      error,
+    })
+  }
+}
+
+
+
+
 export const productController = {
-  createBicycle, getBicycles
+  createBicycle, getBicycles, getSpecificBicycle, updateBicycle, deleteBicycle
 }

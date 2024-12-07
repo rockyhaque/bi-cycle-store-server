@@ -20,7 +20,27 @@ const getBicycles = async (searchTerm?: string): Promise<IProduct[]> => {
   return result
 }
 
+const getSpecificBicycle = async (productId: string) => {
+  const result = await Product.findById(productId)
+  return result
+}
+
+const updateBicycle = async (productId: string, data: IProduct) => {
+  const result = await Product.findByIdAndUpdate(productId, data, {
+    new: true,
+  })
+  return result
+}
+
+const deleteBicycle = async (productId: string) => {
+  const result = await Product.findByIdAndDelete(productId)
+  return result
+}
+
 export const productService = {
   createBicycle,
   getBicycles,
+  getSpecificBicycle,
+  updateBicycle,
+  deleteBicycle,
 }
