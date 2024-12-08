@@ -6,16 +6,28 @@ const createOrder = async (req: Request, res: Response): Promise<void> => {
     const orderData = req.body
     const newOrder = await orderService.createOrder(orderData)
 
-    res.json({
+    res.status(201).json({
       message: 'Order created successfully',
       status: true,
       data: newOrder,
     })
-  } catch (error) {
-    res.json({
+  } catch (error: unknown) {
+    let statusCode = 400
+
+    let errorMessage = 'Something went wrong'
+    if (error instanceof Error) {
+      errorMessage = error.message
+      if (error.message === 'Product not found') {
+        statusCode = 404
+      } else if (error.message === 'Insufficient stock') {
+        statusCode = 422
+      }
+    }
+
+    res.status(statusCode).json({
+      message: errorMessage,
       status: false,
-      message: 'Failed to create order',
-      error,
+      error: error instanceof Error ? error.name : 'Unknown Error',
     })
   }
 }
@@ -29,11 +41,11 @@ const calculateRevenue = async (req: Request, res: Response): Promise<void> => {
       status: true,
       data: revenue,
     })
-  } catch (error) {
-    res.json({
-      status: false,
+  } catch (error: unknown) {
+    res.status(500).json({
       message: 'Failed to calculate revenue',
-      error,
+      status: false,
+      error: error instanceof Error ? error.message : 'Internal Server Error',
     })
   }
 }
