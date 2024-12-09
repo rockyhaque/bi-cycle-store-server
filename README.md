@@ -47,7 +47,7 @@ An Express application with TypeScript, integrating MongoDB with Mongoose to man
 ## Getting Started
 
 ### Project Structure
-![Code Example](https://i.ibb.co.com/T1FBRwF/carbon-3.png)
+![Code Example](https://i.ibb.co.com/XtTT1DJ/carbon-4.png)
 
 
 ### Prerequisites
