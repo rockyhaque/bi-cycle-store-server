@@ -1,5 +1,8 @@
 import { Request, Response } from 'express'
 import { productService } from './product.service'
+import catchAsync from '../../utils/catchAsync'
+import sendResponse from '../../utils/sendResponse'
+import { StatusCodes } from 'http-status-codes'
 
 const createBicycle = async (req: Request, res: Response) => {
   try {
@@ -19,25 +22,17 @@ const createBicycle = async (req: Request, res: Response) => {
   }
 }
 
-const getBicycles = async(req: Request, res: Response) => {
-  try {
-    const {searchTerm} = req.query
-    const result = await productService.getBicycles(searchTerm as string)
-    res.send({
-      message: 'Bicycles retrieved successfully',
-      status: true,
-      data: result,
-    })
-  } catch (error) {
-    res.json({
-      status: false,
-      message: 'Failed to get the bicycles',
-      error,
-    })
-  }
-}
+const getBicycles = catchAsync(async (req, res) => {
+  const result = await productService.getBicycles(req.query)
 
-const getSpecificBicycle = async(req: Request, res: Response) => {
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    message: 'Bicycles retrieved successfully',
+    data: result,
+  })
+})
+
+const getSpecificBicycle = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId
     const result = await productService.getSpecificBicycle(productId)
@@ -55,7 +50,7 @@ const getSpecificBicycle = async(req: Request, res: Response) => {
   }
 }
 
-const updateBicycle = async(req: Request, res: Response) => {
+const updateBicycle = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId
     const body = req.body
@@ -74,7 +69,7 @@ const updateBicycle = async(req: Request, res: Response) => {
   }
 }
 
-const deleteBicycle = async(req: Request, res: Response) => {
+const deleteBicycle = async (req: Request, res: Response) => {
   try {
     const productId = req.params.productId
     await productService.deleteBicycle(productId)
@@ -92,9 +87,10 @@ const deleteBicycle = async(req: Request, res: Response) => {
   }
 }
 
-
-
-
 export const productController = {
-  createBicycle, getBicycles, getSpecificBicycle, updateBicycle, deleteBicycle
+  createBicycle,
+  getBicycles,
+  getSpecificBicycle,
+  updateBicycle,
+  deleteBicycle,
 }
